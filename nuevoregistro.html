@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Crear Registro</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+	<!--Import materialize.css-->
+	<link type="text/css" rel="stylesheet" href="css/materialize.min.css"  media="screen,projection"/>
+
+	<!--Let browser know website is optimized for mobile-->
+	<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  </head>
+  <body>
+	  <nav>
+			<div class="nav-wrapper light-blue darken-4">
+		  <!---<a href="#!" class="brand-logo">Archer API</a>-->
+			<a href="index.html"><img class="materialboxed responsive-img brand-logo " src="images/logo.png" style="width:auto;height:95%"/></a>
+		  
+			  <ul class="right hide-on-med-and-down">
+				<li><a href="nuevoregistro.html">Crear Registro</a></li>
+				<li><a href="buscarregistro.html">Buscar Registro</a></li>
+				<li><a class="light-blue accent-4 waves-effect waves-light btn" id="bt-logout">Exit</a></li>
+			  </ul>
+			  <ul class="left hide-on-large-only">
+				<li><a href="javascript:void(0)" id="bt-search"><i class="material-icons">search</i></a></li>
+			  </ul>
+			  <ul class="right hide-on-large-only">
+				<li><a href="javascript:void(0)" id="bt-mov-logout"><i class="material-icons">exit_to_app</i></a></li>
+			  </ul>
+			</div>
+		  </nav>
+    <div class="container">
+		<h1>Crear entrada</h1>
+	
+      <form class="form-group"id="f-hora" action="javascript:void(0)" method="post">
+		<div class="form-group">
+			<div class="form-group">
+				<label for="titulo">Titulo</label>
+				<input type="text" name="" value="" id="titulo">
+			</div>
+			<div class="form-group">
+				<label for="area">Area</label>
+				<select class="browser-default" id="area" required>
+				  <option value="" disabled selected>Seleccione el área</option>
+				</select>
+				<br>
+			</div>
+			<div class="form-group">
+				<label for="fab">Fabricante</label>
+				<select class="browser-default" id="fab" required>
+				  <option value="" disabled selected>Seleccione el fabricante</option>
+				</select>
+				<br>
+			</div>
+			<div class="form-group">
+				<label for="tec">Tecnología</label>
+				<select class="browser-default" id="tec" required>
+				  <option value="" disabled selected>Seleccione la tecnología</option>
+				</select>
+				<br>
+			</div>
+			<div class="form-group">
+				<label for="mod">Modelo/s</label>
+				<input type="text" name="" value="" id="mod" required>
+			</div>
+			
+			<div class="form-group">
+				<label for="sint">Sintoma/Diagnostico</label>
+				<textarea class="materialize-textarea" type="text" name="" value="" id="sint" cols="3" required></textarea>
+			</div>
+			
+			<div class="form-group">
+				<label for="caus">Causa</label>
+				<textarea class="materialize-textarea" type="text" name="" value="" id="caus" cols="3" required></textarea>
+			</div>
+			
+			<div class="form-group">
+				<label for="solu">Solucion</label>
+				<textarea class="materialize-textarea" type="text" name="" value="" id="solu" cols="3" required></textarea>
+			</div>
+			<br>
+			<button type="submit" class="btn btn-primary" name="button" id="bt-nregistro" >Crear registro</button>
+		</div>
+			
+      </form>
+    </div>
+	
+    <script type="text/javascript" src="js/jquery-3.2.1.min.js">
+    </script>
+	<script type="text/javascript" src="js/jquery.soap.js">
+    </script>
+    <script type="text/javascript" src="js/bootstrap.min.js">
+    </script>
+	<script type="text/javascript" src="js/nuevoregistro.js?anyversion">
+    </script>
+
+  </body>
+</html>

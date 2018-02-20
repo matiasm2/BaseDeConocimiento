@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+	<!--Import Google Icon Font-->
+	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+	<!--Import materialize.css-->
+	<link type="text/css" rel="stylesheet" href="css/materialize.min.css"  media="screen,projection"/>
+	<link type="text/css" rel="stylesheet" href="css/footer.css"  media="screen,projection"/>
+
+	<!--Let browser know website is optimized for mobile-->
+	<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  </head>
+  <body> 
+  <header>
+	  <nav>
+		<div class="nav-wrapper light-blue darken-4">
+		  <!---<a href="#!" class="brand-logo">Archer API</a>-->
+			<a href="index.html"><img class="materialboxed responsive-img brand-logo " src="images/logo.png" style="width:auto;height:95%"/></a>
+		  
+		  <ul class="right hide-on-med-and-down">
+			<li><a href="nuevoregistro.html">Crear Registro</a></li>
+			<li><a href="buscarregistro.html">Buscar Registro</a></li>
+			<li><a class="light-blue accent-4 waves-effect waves-light btn" id="bt-logout">Exit</a></li>
+		  </ul>
+		  <ul class="left hide-on-large-only">
+				<li><a href="javascript:void(0)" id="bt-menu"><i class="material-icons">menu</i></a></li>
+			</ul>
+		  <ul class="right hide-on-large-only">
+			<li><a href="javascript:void(0)" id="bt-mov-logout"><i class="material-icons">exit_to_app</i></a></li>
+		  </ul>
+		</div>
+	  </nav>
+	  </header>
+		
+		<div class="container">
+			<form class="form-group " id="f-buscar" action="javascript:void(0)" method="post">
+					<div class="form-group">
+						<label for="keyword">Busqueda</label>
+						<input type="text" name="" value="" id="keyword">
+				</div>
+				
+				<div class="switch">
+					<label for="check2">Filtrar por fabricante&nbsp;</label>
+					<label>
+					  <input type="checkbox" id="check2">
+					  <span class="lever "></span>
+					</label>
+					
+				</div>
+				
+				<div class="form-group" id="div-fab">
+					<br>
+					<label for="fab">Fabricante</label>
+					<select class="browser-default" id="fab" required>
+					  <option value="" disabled selected>Seleccione el fabricante</option>
+					</select>
+					<br>
+				</div>
+				
+				<div class="switch">
+					<label for="check">Filtrar por tecnología</label>
+					<label>
+					  <input type="checkbox" id="check">
+					  <span class="lever "></span>
+					</label>
+						</div>
+					
+					<div class="form-group" id="div-tec">
+					<br>
+					<label for="tec">Tecnología</label>
+					<select class="browser-default" id="tec" required>
+					  <option value="" disabled selected>Seleccione la tecnología</option>
+	
+					</select>
+					<br>
+				</div>
+				
+				<br>
+				<button type="submit" class="btn btn-primary light-blue accent-4" name="button" id="bt-buscar" ><i class="material-icons">search</i></button>
+			</form>
+			<table id="table" class="responsive-table">
+				<thead>
+					<tr>
+						<th>Título</th>
+						<th>Síntoma/Diagnóstico</th>
+						<th>Fabricante</th>
+						<th>Tecnología</th>
+					</tr>
+				</thead>
+					<tbody id="tbody">
+				</tbody>
+			</table>
+			<a class="light-blue accent-4 waves-effect waves-light btn" id="bt-research">Volver a buscar</a>
+		</div>
+		
+    <script type="text/javascript" src="js/jquery-3.2.1.min.js">
+    </script>
+	<script type="text/javascript" src="js/jquery.soap.js">
+    </script>
+	<script type="text/javascript" src="js/materialize.min.js"></script>
+	<script type="text/javascript" src="js/buscarregistro.js?anyversion">
+    </script>
+
+  </body>
+</html>

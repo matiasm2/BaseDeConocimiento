@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Login prueba</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+	<!--Import materialize.css-->
+	<link type="text/css" rel="stylesheet" href="css/materialize.min.css"  media="screen,projection"/>
+
+	<!--Let browser know website is optimized for mobile-->
+	<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  </head>
+  <body>
+	<nav>
+		<div class="nav-wrapper light-blue darken-4">
+			<a href="index.html"><img class="responsive-img brand-logo " src="images/logo.png" style="width:auto;height:95%"/></a>
+		  
+		</div>
+	  </nav>
+    <div class="container">
+		<h1>Base de conocimiento</h1>
+      <form action="javascript:void(0)" id="login">
+            <div class="form-group">
+              <label for="username">Usuario</label>
+              <input type="text" class="form-control" id="username" placeholder="Ingrese su nombre de usuario" required>
+            </div>
+            <div class="form-group">
+              <label for="password">Contraseña</label>
+              <input type="password" class="form-control" id="password" placeholder="Contraseña" required>
+            </div>
+            <button type="submit" class="btn btn-primary" id="submit">Loguear</button>
+      </form>
+    </div>
+
+    <script type="text/javascript" src="js/jquery-3.2.1.min.js">
+    </script>
+	<script type="text/javascript" src="js/jquery.soap.js">
+    </script>
+	<script type="text/javascript" src="js/materialize.min.js"></script>
+    <script type="text/javascript" src="js/login.js?anyversion">
+    </script>
+
+  </body>
+</html>
