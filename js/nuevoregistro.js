@@ -1,6 +1,7 @@
+var bdCModuleId = 2467; //Id de la aplicación Base de Conocimiento
+
 $(document).ready(function() {
-	
-	
+
 	//Habilita la consola en iexplorer
 	if ( ! window.console ) console = { log: function(){} };
 	String.prototype.format = function() {
@@ -11,46 +12,48 @@ $(document).ready(function() {
 		}
 		return s;
     };
-	
-	
+
+
 	var baseURL = '{0}//{1}'.format(window.location.protocol, window.location.host); // Build the base URL from address bar
-	
+
 
 	//
 	if (typeof(Storage) !== "undefined") {
 		if (!localStorage.sessionToken) {
 			window.location=baseURL+'/index.html';
 		} else{
+
+			console.log(localStorage.sessionToken);
 			console.log('Area');
-			getValuesList(localStorage.sessionToken, 5683, $('#area'));
+			getValuesList(localStorage.sessionToken, 5886, $('#area'));
 			console.log('Fabricantes');
-			getValuesList(localStorage.sessionToken, 5682, $('#fab'));
+			getValuesList(localStorage.sessionToken, 2682, $('#fab'));
 			console.log('Tecnologias');
-			getValuesList(localStorage.sessionToken, 5681, $('#tec'));
+			getValuesList(localStorage.sessionToken, 2681, $('#tec'));
 		}
 	} else {
 			// Sorry! No Web Storage support..
 			alert("pichon");
 	}
-	
+
 	$('#bt-nregistro').click(function(){
-		createRecord(localStorage.sessionToken, 542, '');
+		createRecord(localStorage.sessionToken, bdCModuleId);
     });
-	
+
 	$('#bt-buscar').click(function(){
 		alert($('#keyword').val());
 		executeSearch(localStorage.sessionToken, createSearchOptionsHora($('#keyword').val()), 1);
     });
-	
+
 	$('#bt-search').click(function (){
 		window.location=baseURL+'/buscarregistro.html';
 	});
-	
+
 	$('#bt-logout').click(function(){
 		localStorage.removeItem("sessionToken");
 		window.location=baseURL+'/index.html';
     });
-	
+
 	$('#bt-mov-logout').click(function(){
 		localStorage.removeItem("sessionToken");
 		window.location=baseURL+'/index.html';
@@ -58,20 +61,23 @@ $(document).ready(function() {
 
 });
 
-function createFieldValuesHora(){
+function createFieldValuesRegistro(){
+
+	// TODO: Se podria automatizar la busqueda de los id trayendo la definicion de los campos de la aplicación y filtrando por alias.
+	// Se hace via REST
 	cdata = '<![CDATA[';
 	fieldValues1 = '<fieldValues>';
-	titulo = '<Field id="30523" value="'+$('#titulo').val()+'"></Field>';
-	area = '<Field id="30533" value="'+$('#area').val()+'"></Field>';
-	fabri = '<Field id="30532" value="'+$('#fab').val()+'"></Field>';
-	tec = '<Field id="30529" value="'+$('#tec').val()+'"></Field>';
-	mod = '<Field id="30537" value="'+$('#mod').val()+'"></Field>';
-	sint = '<Field id="30530" value="'+$('#sint').val()+'"></Field>';
-	causa = '<Field id="30534" value="'+$('#caus').val()+'"></Field>';
-	soluc = '<Field id="30535" value="'+$('#solu').val()+'"></Field>';
+	titulo = '<Field id="22517" value="'+$('#titulo').val()+'"></Field>';
+	area = '<Field id="22524" value="'+$('#area').val()+'"></Field>';
+	fabri = '<Field id="22523" value="'+$('#fab').val()+'"></Field>';
+	tec = '<Field id="22520" value="'+$('#tec').val()+'"></Field>';
+	mod = '<Field id="22528" value="'+$('#mod').val()+'"></Field>';
+	sint = '<Field id="22521" value="'+$('#sint').val()+'"></Field>';
+	causa = '<Field id="22525" value="'+$('#caus').val()+'"></Field>';
+	soluc = '<Field id="22526" value="'+$('#solu').val()+'"></Field>';
 	fieldValues2 = '</fieldValues>';
 	ccdata = ']]>';
-	
+
 	fieldValues = [cdata, fieldValues1, titulo, area, fabri, tec, mod, sint, causa, soluc, fieldValues2, ccdata];
 	return fieldValues.join('');
 }
@@ -96,7 +102,7 @@ function createSearchOptionsHora(txticket){
 					'</DisplayFields>',
 					'<Criteria>',
 						'<ModuleCriteria>',
-							'<Module>542</Module>',
+							'<Module>'+bdCModuleId+'</Module>',
 						'</ModuleCriteria>',
 						txtt,
 					'</Criteria>',
@@ -112,7 +118,7 @@ function createOption(selecte, value){
 
 function getValuesList (sessionToken, valuesListId, selecte){
 	$.soap({
-		url: 'https://10.100.107.90/ws/field.asmx',
+		url: location.protocol+'//172.16.1.52/ws/field.asmx',
 		method: 'GetValuesList',
 		SOAPAction: 'http://archer-tech.com/webservices/GetValuesList',
 		namespaceURL: 'http://archer-tech.com/webservices/',
@@ -148,7 +154,7 @@ function getValuesList (sessionToken, valuesListId, selecte){
 			alert('Ha ocurrido un error al crear un registro: \n'+SOAPResponse.content.documentElement.getElementsByTagName('faultstring')[0].innerHTML);
 			if (SOAPResponse.content.documentElement.getElementsByTagName('faultstring')[0].innerHTML ="Server was unable to process request. ---&gt; Invalid session token"){
 				localStorage.removeItem("sessionToken");
-				window.location='https://10.100.107.90:4433/index.html';
+				window.location='https://172.16.1.52:4433/index.html';
 			}
 		}
 	});
@@ -157,7 +163,7 @@ function getValuesList (sessionToken, valuesListId, selecte){
 
 function executeQuickSearchWithModuleIds (sessionToken, moduleIds, keywords, pageNumber, pageSize){
 	$.soap({
-		url: 'https://10.100.107.90/ws/search.asmx',
+		url: location.protocol+'//172.16.1.52/ws/search.asmx',
 		method: 'ExecuteQuickSearchWithModuleIds',
 		SOAPAction: 'http://archer-tech.com/webservices/ExecuteQuickSearchWithModuleIds',
 		namespaceURL: 'http://archer-tech.com/webservices/',
@@ -189,7 +195,7 @@ function executeQuickSearchWithModuleIds (sessionToken, moduleIds, keywords, pag
 
 function executeSearch (sessionToken, searchOptions, pageNumber){
 	$.soap({
-		url: 'https://10.100.107.90/ws/search.asmx',
+		url: location.protocol+'//172.16.1.52/ws/search.asmx',
 		method: 'ExecuteSearch',
 		SOAPAction: 'http://archer-tech.com/webservices/ExecuteSearch',
 		namespaceURL: 'http://archer-tech.com/webservices/',
@@ -217,16 +223,16 @@ function executeSearch (sessionToken, searchOptions, pageNumber){
 	});
 }
 
-function createRecord (sessionToken, moduleId, hora, ticket){
+function createRecord (sessionToken, moduleId){
 	var fieldValues;
 	$.soap({
-		url: 'https://10.100.107.90/ws/record.asmx',
+		url: location.protocol+'//172.16.1.52/ws/record.asmx',
 		method: 'CreateRecord',
 		SOAPAction: 'http://archer-tech.com/webservices/CreateRecord',
 		namespaceURL: 'http://archer-tech.com/webservices/',
 		appendMethodToURL: false,
-	
-	
+
+
 		/*data: function(SOAPObject) {
 			root = new SOAPObject('CreateRecord');
 				sessionTok = new SOAPObject('sessionToken');
@@ -249,11 +255,11 @@ function createRecord (sessionToken, moduleId, hora, ticket){
 			root.appendChild(fieldValues);
 			return root;
 		},*/
-	
+
 		data: {
 			sessionToken: sessionToken,
 			moduleId: moduleId,
-			fieldValues: createFieldValuesHora()
+			fieldValues: createFieldValuesRegistro()
 		},
 
 		success: function (soapResponse) {
@@ -263,12 +269,13 @@ function createRecord (sessionToken, moduleId, hora, ticket){
 			// or soapResponse.toXML() to get XML DOM
 			console.log('Ok');
 			alert('Se ha creado el registro exitosamente');
-			window.location='https://10.100.107.90:4433/detalleregistro.html?id='+soapResponse.content.documentElement.getElementsByTagName('CreateRecordResult')[0].innerHTML;
-			
+			window.location='https://172.16.1.52:4433/detalleregistro.html?id='+soapResponse.content.documentElement.getElementsByTagName('CreateRecordResult')[0].innerHTML;
+			console.log(soapResponse.content.documentElement.getElementsByTagName('CreateRecordResult')[0].innerHTML);
+
 			//console.log(soapResponse.content.documentElement);
 			//console.log(soapResponse.content.documentElement.getElementsByTagName('CreateRecordResult'));
 			//console.log(soapResponse.content.documentElement.getElementsByTagName('CreateRecordResult')[0].innerHTML);
-			
+
 		},
 		error: function (SOAPResponse) {
 			// show error
@@ -276,7 +283,7 @@ function createRecord (sessionToken, moduleId, hora, ticket){
 			alert('Ha ocurrido un error al crear un registro: \n'+SOAPResponse.content.documentElement.getElementsByTagName('faultstring')[0].innerHTML);
 			if (SOAPResponse.content.documentElement.getElementsByTagName('faultstring')[0].innerHTML ="Server was unable to process request. ---&gt; Invalid session token"){
 				localStorage.removeItem("sessionToken");
-				window.location='https://10.100.107.90:4433/index.html';
+				window.location='https://172.16.1.52:4433/index.html';
 			}
 			console.log(SOAPResponse);
 		}

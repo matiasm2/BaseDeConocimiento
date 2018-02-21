@@ -1,11 +1,13 @@
+var bdCModuleId = 2467; //Id de la aplicación Base de Conocimiento
+
 $(document).ready(function() {
 	$('#div-tec').hide();
 	$('#div-fab').hide();
 	$('#table').hide();
 	$('#bt-research').hide();
-	
-	
-	
+
+
+
 	//Habilita la consola en iexplorer
 	if ( ! window.console ) console = { log: function(){} };
 	String.prototype.format = function() {
@@ -16,9 +18,9 @@ $(document).ready(function() {
 		}
 		return s;
     };
-	
+
 	var baseURL = '{0}//{1}'.format(window.location.protocol, window.location.host); // Build the base URL from address bar
-	
+
 
 	//
 	if (typeof(Storage) !== "undefined") {
@@ -26,15 +28,15 @@ $(document).ready(function() {
 			window.location=baseURL+'/index.html';
 		} else{
 			console.log('Fabricantes');
-			getValuesList(localStorage.sessionToken, 5682, $('#fab'));
+			getValuesList(localStorage.sessionToken, 2682, $('#fab'));
 			console.log('Tecnologías');
-			getValuesList(localStorage.sessionToken, 5681, $('#tec'));
+			getValuesList(localStorage.sessionToken, 2681, $('#tec'));
 		}
 	} else {
 			// Sorry! No Web Storage support..
 			alert("pichon");
 	}
-	
+
 	$('#check').click(function(){
 		if($('#check')[0].checked){
 			$('#div-tec').show();
@@ -42,7 +44,7 @@ $(document).ready(function() {
 			$('#div-tec').hide();
 		}
 	});
-	
+
 	$('#check2').click(function(){
 		if($('#check2')[0].checked){
 			$('#div-fab').show();
@@ -54,20 +56,20 @@ $(document).ready(function() {
 		$('#table').hide();
 		$('#f-buscar').show();
 		$('bt-research').hide();
-		
+
     });
-	
+
 	$('#bt-buscar').click(function(){
 		$('#table').show();
 		$('bt-research').show();
 		executeSearch(localStorage.sessionToken, createSearchOptionsHora($('#keyword').val()), 1);
     });
-	
+
 	$('#bt-logout').click(function(){
 		localStorage.removeItem("sessionToken");
 		window.location=baseURL+'/index.html';
     });
-	
+
 	$('#bt-mov-logout').click(function(){
 		localStorage.removeItem("sessionToken");
 		window.location=baseURL+'/index.html';
@@ -81,7 +83,7 @@ function createOption(selecte, value){
 
 function getValuesList (sessionToken, valuesListId, selecte){
 	$.soap({
-		url: 'https://10.100.107.90/ws/field.asmx',
+		url: location.protocol+'//172.16.1.52/ws/field.asmx',
 		method: 'GetValuesList',
 		SOAPAction: 'http://archer-tech.com/webservices/GetValuesList',
 		namespaceURL: 'http://archer-tech.com/webservices/',
@@ -117,7 +119,7 @@ function getValuesList (sessionToken, valuesListId, selecte){
 			alert('Ha ocurrido un error al crear un registro: \n'+SOAPResponse.content.documentElement.getElementsByTagName('faultstring')[0].innerHTML);
 			if (SOAPResponse.content.documentElement.getElementsByTagName('faultstring')[0].innerHTML ="Server was unable to process request. ---&gt; Invalid session token"){
 				localStorage.removeItem("sessionToken");
-				window.location='https://10.100.107.90:4433/index.html';
+				window.location='https://172.16.1.52:4433/index.html';
 			}
 		}
 	});
@@ -130,7 +132,7 @@ function createSearchOptionsHora(txticket){
 	if($('#check')[0].checked){
 		tecnologia= '<ValueListFilterCondition>'+
 						'<Operator>Contains</Operator>'+
-						'<Field>30529</Field>'+
+						'<Field>22520</Field>'+
 						'<IsNoSelectionIncluded>False</IsNoSelectionIncluded>'+
 						'<Values>'+
 							'<Value>'+$('#tec').val()+'</Value>'+
@@ -140,7 +142,7 @@ function createSearchOptionsHora(txticket){
 	if($('#check2')[0].checked){
 		fabricante= '<ValueListFilterCondition>'+
 						'<Operator>Contains</Operator>'+
-						'<Field>30532</Field>'+
+						'<Field>22523</Field>'+
 						'<IsNoSelectionIncluded>False</IsNoSelectionIncluded>'+
 						'<Values>'+
 							'<Value>'+$('#fab').val()+'</Value>'+
@@ -150,22 +152,22 @@ function createSearchOptionsHora(txticket){
 	}
 	if(txticket != '')txtt = '<TextFilterCondition>'+
 									  '<Operator>Contains</Operator>'+
-									  '<Field name="Numero de ticket">30530</Field>'+
+									  '<Field name="Numero de ticket">22518</Field>'+
 									  '<Value>'+txticket+'</Value>'+
 									'</TextFilterCondition>';
 	xml = ['<![CDATA[',
 				'<SearchReport>',
 					'<PageSize>100</PageSize>',
 					'<DisplayFields>',
-						'<DisplayField name="Titulo">'+30523+'</DisplayField>',
-						'<DisplayField name="Sintoma">'+30530+'</DisplayField>',
-						'<DisplayField name="Solucion">'+30535+'</DisplayField>',
-						'<DisplayField name="Fabricante">'+30532+'</DisplayField>',
-						'<DisplayField name="Tecnología">'+30529+'</DisplayField>',
+						'<DisplayField name="Titulo">'+22517+'</DisplayField>',
+						'<DisplayField name="Sintoma">'+22521+'</DisplayField>',
+						'<DisplayField name="Solucion">'+22526+'</DisplayField>',
+						'<DisplayField name="Fabricante">'+22523+'</DisplayField>',
+						'<DisplayField name="Tecnología">'+22520+'</DisplayField>',
 					'</DisplayFields>',
 					'<Criteria>',
 						'<ModuleCriteria>',
-							'<Module>542</Module>',
+							'<Module>'+bdCModuleId+'</Module>',
 						'</ModuleCriteria>',
 						'<Filter>',
 							'<Conditions>',
@@ -189,13 +191,13 @@ function createRecordRow(record){
 			  '<td>'+record.children[4].innerHTML+'</td>',
 		'</tr>'
 	];
-	
+
 	$('#tbody').append(html.join(''));
 }
 
 function executeSearch (sessionToken, searchOptions, pageNumber){
 	$.soap({
-		url: 'https://10.100.107.90/ws/search.asmx',
+		url: location.protocol+'//172.16.1.52/ws/search.asmx',
 		method: 'ExecuteSearch',
 		SOAPAction: 'http://archer-tech.com/webservices/ExecuteSearch',
 		namespaceURL: 'http://archer-tech.com/webservices/',
@@ -229,7 +231,7 @@ function executeSearch (sessionToken, searchOptions, pageNumber){
 			alert('Ha ocurrido un error al buscar un registro: \n'+SOAPResponse.content.documentElement.getElementsByTagName('faultstring')[0].innerHTML);
 			if (SOAPResponse.content.documentElement.getElementsByTagName('faultstring')[0].innerHTML ="Server was unable to process request. ---&gt; Invalid session token"){
 				localStorage.removeItem("sessionToken");
-				window.location='https://10.100.107.90:4433/index.html';
+				window.location='https://172.16.1.52:4433/index.html';
 			}
 		}
 	});
