@@ -78,7 +78,17 @@ function createUserSessionFromInstance (username, password, instancename){
 		error: function (soapResponse) {
 			console.log('Error');
 			console.log(soapResponse);
-			if(soapResponse.content.firstChild){alert(soapResponse.content.firstChild.textContent)}
+			if(soapResponse.content && soapResponse.content.firstChild){alert(soapResponse.content.firstChild.textContent)}
+			if (soapResponse.httpText=="NetworkError: Failed to execute 'send' on 'XMLHttpRequest': Failed to load 'https://172.16.1.52/ws/general.asmx'."){
+				alert("Por favor, concedanos permiso para ingresar al siguiente sitio:")
+				var win =  window.open("https://172.16.1.52/", "_blank", "height=600,width=600,modal=yes,alwaysRaised=yes");
+				var timer = setInterval(function() {   
+					if(win.closed) {  
+						clearInterval(timer);  
+						window.location.reload();
+					}  
+				}, 1000); 
+							}
 
 		}
 	});
