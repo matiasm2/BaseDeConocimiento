@@ -105,7 +105,7 @@ function getRecordById (sessionToken, moduleId, contentId){
 			alert('Ha ocurrido un error al crear un registro: \n'+SOAPResponse.content.documentElement.getElementsByTagName('faultstring')[0].innerHTML);
 			if (SOAPResponse.content.documentElement.getElementsByTagName('faultstring')[0].innerHTML ="Server was unable to process request. ---&gt; Invalid session token"){
 				localStorage.removeItem("sessionToken");
-				window.location='http://172.16.1.52:8081/index.html';
+				window.location='https://172.16.1.52:4433/index.html';
 			}
 		}
 	});
@@ -236,7 +236,7 @@ function executeSearch (sessionToken, searchOptions, pageNumber){
 			alert('Ha ocurrido un error al crear un registro: \n'+SOAPResponse.content.documentElement.getElementsByTagName('faultstring')[0].innerHTML);
 			if (SOAPResponse.content.documentElement.getElementsByTagName('faultstring')[0].innerHTML ="Server was unable to process request. ---&gt; Invalid session token"){
 				localStorage.removeItem("sessionToken");
-				window.location='http://172.16.1.52:8081/index.html';
+				window.location='https://172.16.1.52:44331/index.html';
 			}
 		}
 	});

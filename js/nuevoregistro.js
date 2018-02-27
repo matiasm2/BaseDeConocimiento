@@ -2,25 +2,11 @@ var bdCModuleId = 2467; //Id de la aplicación Base de Conocimiento
 
 $(document).ready(function() {
 
-	//Habilita la consola en iexplorer
-	if ( ! window.console ) console = { log: function(){} };
-	String.prototype.format = function() {
-		var s = this,
-		i = arguments.length;
-		while (i--) {
-			s = s.replace(new RegExp('\\{' + i + '\\}', 'gm'), arguments[i]);
-		}
-		return s;
-    };
-
-
-	var baseURL = '{0}//{1}'.format(window.location.protocol, window.location.host); // Build the base URL from address bar
-
 
 	//
 	if (typeof(Storage) !== "undefined") {
 		if (!localStorage.sessionToken) {
-			window.location=baseURL+'/index.html';
+			window.location='index.html';
 		} else{
 
 			console.log(localStorage.sessionToken);
@@ -37,8 +23,30 @@ $(document).ready(function() {
 	}
 
 	$('#bt-nregistro').click(function(){
-		createRecord(localStorage.sessionToken, bdCModuleId);
-    });
+			var filesIds = [];
+			files = $('#files')[0].files;
+		 	if (files.length > 0){
+					 console.log(1);
+					 for (i=0; i<files.length; i++){
+								 var fil =[files[i].name]
+								 var reader = new FileReader();
+								 reader.onload = function () {
+										 console.log(reader.result.split(',',2));
+										 fil.push(reader.result.split(',',2)[1]);
+										 res = postAttachment(localStorage.sessionToken, fil[0] , fil[1]);
+										 filesIds.push(res.RequestedObject.Id)
+										 console.log(filesIds.length +" " +files.length );
+										 if (filesIds.length == files.length ){
+											 		json = createContentJSON(filesIds);
+													postContent(localStorage.sessionToken, json);
+										 }
+								 }
+								 reader.readAsDataURL(files[i]);
+
+				 };
+
+  }
+});
 
 	$('#bt-buscar').click(function(){
 		alert($('#keyword').val());
@@ -65,6 +73,7 @@ function createFieldValuesRegistro(){
 
 	// TODO: Se podria automatizar la busqueda de los id trayendo la definicion de los campos de la aplicación y filtrando por alias.
 	// Se hace via REST
+
 	cdata = '<![CDATA[';
 	fieldValues1 = '<fieldValues>';
 	titulo = '<Field id="22517" value="'+$('#titulo').val()+'"></Field>';
@@ -82,33 +91,71 @@ function createFieldValuesRegistro(){
 	return fieldValues.join('');
 }
 
-function createSearchOptionsHora(txticket){
-	txtt = '';
-	if(txticket != '')txtt = '<Filter>'+
-								  '<Conditions>'+
-									'<TextFilterCondition>'+
-									  '<Operator>Contains</Operator>'+
-									  '<Field name="Numero de ticket">30523</Field>'+
-									  '<Value>'+txticket+'</Value>'+
-									'</TextFilterCondition>'+
-								  '</Conditions>'+
-								'</Filter>';
-	xml = ['<![CDATA[',
-				'<SearchReport>',
-					'<PageSize>100</PageSize>',
-					'<DisplayFields>',
-						'<DisplayField name="Horas">'+30522+'</DisplayField>',
-						'<DisplayField name="Numero de Ticket">'+30523+'</DisplayField>',
-					'</DisplayFields>',
-					'<Criteria>',
-						'<ModuleCriteria>',
-							'<Module>'+bdCModuleId+'</Module>',
-						'</ModuleCriteria>',
-						txtt,
-					'</Criteria>',
-				'</SearchReport>',
-			']]>'];
-	return xml.join('');
+function createContentJSON(attachments){
+		data = {
+	       "Content":{
+	           "LevelId" : 2261,
+	           "FieldContents" : {
+	                "22517": {
+	                    "Type" : 1,
+	                    "Value" : $('#titulo').val(),
+	                     "FieldId": 22517
+	                 },
+	                 "22524": {
+	                     "Type" : 4,
+	                     "Value" : {
+												 		"ValuesListIds" : [$('#area').val()],
+														"OtherText" : null
+													},
+	                      "FieldId": 22524
+	                  },
+	                  "22523": {
+	                      "Type" : 4,
+	                      "Value" : {
+															"ValuesListIds" : [$('#fab').val()],
+															"OtherText" : null
+														},
+	                       "FieldId": 22523
+	                   },
+	                  "22520": {
+	                      "Type" : 4,
+	                      "Value" : {
+															"ValuesListIds" :  [$('#tec').val()],
+															"OtherText" : null
+														},
+	                       "FieldId": 22520
+	                   },
+	                   "22528": {
+	                       "Type" : 1,
+	                       "Value" : $('#mod').val(),
+	                        "FieldId": 22528
+	                    },
+											"22521": {
+	                        "Type" : 1,
+	                        "Value" : $('#sint').val(),
+	                         "FieldId": 22521
+	                     },
+											 "22525": {
+		                       "Type" : 1,
+		                       "Value" : $('#caus').val(),
+		                        "FieldId": 22525
+		                    },
+												"22526": {
+		                        "Type" : 1,
+		                        "Value" : $('#solu').val(),
+		                         "FieldId": 22526
+		                     },
+	                    "22527": {
+	                        "Type" : 11,
+	                        "Value" : attachments,
+	                         "FieldId": 22527
+	                     }
+
+	                }
+	            }
+	        };
+
+			return data;
 }
 
 function createOption(selecte, value){
@@ -156,69 +203,6 @@ function getValuesList (sessionToken, valuesListId, selecte){
 				localStorage.removeItem("sessionToken");
 				window.location='https://172.16.1.52:4433/index.html';
 			}
-		}
-	});
-}
-
-
-function executeQuickSearchWithModuleIds (sessionToken, moduleIds, keywords, pageNumber, pageSize){
-	$.soap({
-		url: location.protocol+'//172.16.1.52/ws/search.asmx',
-		method: 'ExecuteQuickSearchWithModuleIds',
-		SOAPAction: 'http://archer-tech.com/webservices/ExecuteQuickSearchWithModuleIds',
-		namespaceURL: 'http://archer-tech.com/webservices/',
-		appendMethodToURL: false,
-
-		data: {
-			sessionToken: sessionToken,
-			moduleIds: moduleIds,
-			keywords: keywords,
-			pageNumber: pageNumber,
-			pageSize: pageSize
-		},
-
-		success: function (soapResponse) {
-			// do stuff with soapResponse
-			// if you want to have the response as JSON use soapResponse.toJSON();
-			// or soapResponse.toString() to get XML string
-			// or soapResponse.toXML() to get XML DOM
-			console.log('Ok');
-			console.log(soapResponse);
-		},
-		error: function (SOAPResponse) {
-			// show error
-			console.log('Error');
-			console.log(SOAPResponse);
-		}
-	});
-}
-
-function executeSearch (sessionToken, searchOptions, pageNumber){
-	$.soap({
-		url: location.protocol+'//172.16.1.52/ws/search.asmx',
-		method: 'ExecuteSearch',
-		SOAPAction: 'http://archer-tech.com/webservices/ExecuteSearch',
-		namespaceURL: 'http://archer-tech.com/webservices/',
-		appendMethodToURL: false,
-
-		data: {
-			sessionToken: sessionToken,
-			searchOptions: searchOptions,
-			pageNumber: pageNumber
-		},
-
-		success: function (soapResponse) {
-			// do stuff with soapResponse
-			// if you want to have the response as JSON use soapResponse.toJSON();
-			// or soapResponse.toString() to get XML string
-			// or soapResponse.toXML() to get XML DOM
-			console.log('Ok');
-			console.log(soapResponse);
-		},
-		error: function (SOAPResponse) {
-			// show error
-			console.log('Error');
-			console.log(SOAPResponse);
 		}
 	});
 }
@@ -288,4 +272,117 @@ function createRecord (sessionToken, moduleId){
 			console.log(SOAPResponse);
 		}
 	});
+}
+
+function postContent(sessionToken, content){
+		var restAPICall = content;
+		var response = '';
+
+		$.ajax({
+				 type: "POST",
+				 url: 'https://10.100.107.90:8088/https://172.16.1.52/api/core/content',
+				 data: JSON.stringify(restAPICall),
+				 headers: {
+						 'Accept':'application/json,text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+						 'Authorization':'Archer session-id='+sessionToken,
+						 'Content-Type': 'application/json'
+				 },
+				 contentType: 'application/json',
+				 processData: false,
+				 async: false,
+				 dataType: 'json',
+				 success: function(data, textStatus, jqXHR) {
+					 console.log(data);
+					 response = data;
+					 if (data.IsSuccessful){
+							 alert('Se ha creado el registro exitosamente');
+			 				 window.location='https://172.16.1.52:4433/detalleregistro.html?id='+data.RequestedObject.Id;
+					 }
+				},
+				error: function(jqXHR, textStatus, errorThorwn) {
+							console.log(jqXHR);
+							console.log(('Ocurrio un error al llamar a la API: ' + textStatus));
+							console.log(errorThorwn);
+				}
+
+		});
+
+		return response;
+}
+
+
+
+function postAttachment(sessionToken, attachmentName, attachmentBytes){
+		var restAPICall = {"AttachmentName":attachmentName, "AttachmentBytes":attachmentBytes};
+		var response = '';
+
+		$.ajax({
+				 type: "POST",
+				 url: 'https://10.100.107.90:8088/https://172.16.1.52/api/core/content/attachment',
+				 data: JSON.stringify(restAPICall),
+				 headers: {
+						 'Accept':'application/json,text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+						 'Authorization':'Archer session-id='+sessionToken,
+						 'Content-Type': 'application/json'
+				 },
+				 contentType: 'application/json',
+				 processData: false,
+				 async: false,
+				 dataType: 'json',
+				 success: function(data, textStatus, jqXHR) {
+					 console.log(data);
+					 response = data;
+				},
+				error: function(jqXHR, textStatus, errorThorwn) {
+							console.log(jqXHR);
+							console.log(('Ocurrio un error al llamar a la API: ' + textStatus));
+							console.log(errorThorwn);
+				}
+
+		});
+
+		return response;
+}
+
+function putAttachments(sessionToken, contentId, attachments){
+		var restAPICall = {"Content":{
+            "Id": contentId ,
+            "LevelId" : 2261,
+            "FieldContents" : {
+                "22527": {
+                    "Type" : 11,
+                    "Value" : attachments,
+                     "FieldId": 22527
+                 }
+                 }
+             }};
+
+		var response = '';
+
+		$.ajax({
+				 type: "PUT",
+				 url: 'https://10.100.107.90:8088/https://172.16.1.52/api/core/content',
+				 data: JSON.stringify(restAPICall),
+				 headers: {
+						 'Accept':'application/json,text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+						 'Authorization':'Archer session-id='+sessionToken,
+						 'Content-Type': 'application/json'
+				 },
+				 contentType: 'application/json',
+				 processData: false,
+				 async: false,
+				 dataType: 'json',
+				 success: function(data, textStatus, jqXHR) {
+					 console.log(data);
+					 response = data;
+				},
+				error: function(jqXHR, textStatus, errorThorwn) {
+							console.log(jqXHR);
+							console.log(('Ocurrio un error al llamar a la API: ' + textStatus));
+							console.log(errorThorwn);
+				}
+
+		});
+
+		return response;
 }
