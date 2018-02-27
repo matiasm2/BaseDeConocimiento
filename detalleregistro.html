@@ -11,10 +11,10 @@
 	<!--Let browser know website is optimized for mobile-->
 	<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   </head>
-  <body> 
+  <body>
 	  <nav>
 		<div class="nav-wrapper light-blue darken-4">
-		  <a href="index.html"><img class="materialboxed responsive-img brand-logo " src="images/logo.png" style="width:auto;height:95%"/></a>
+		  <a href="index.html"><img class="responsive-img brand-logo " src="images/logo.png" style="width:auto;height:95%"/></a>
 		  <ul class="right hide-on-med-and-down">
 			<li><a href="nuevoregistro.html">Crear Registro</a></li>
 			<li><a href="buscarregistro.html">Buscar Registro</a></li>
@@ -29,7 +29,7 @@
 			  </ul>
 		</div>
 	  </nav>
-		
+
 		<div class="container">
 			<!--<div class="row">
 				<div class="col s12 m6">
@@ -49,7 +49,7 @@
 				  </div>
 				</div>
 			</div>-->
-			
+
 			<div class="card light-blue darken-4">
               <div class="card-content white-text">
                 <span class="card-title" id="sp-titulo"></span>
@@ -59,7 +59,9 @@
 					  <p id="sp-fab"></p>
 					  <p id="sp-tec"></p>
 					  <p id="p-modelo"></p>
-					  <a href="javascript:void(0)" id="bt-del"><i class="material-icons">delete</i></a>
+            <div id="buttons">
+					         <a href="javascript:void(0)" id="bt-del"><i class="material-icons">delete</i></a>
+            </div>
               </div>
               <div class="card-tabs">
                 <ul class="tabs tabs-fixed-width tabs-transparent">
@@ -67,6 +69,7 @@
                   <li class="tab"><a class="active" href="#test5">Causa</a></li>
                   <li class="tab"><a href="#test6">Solucion</a></li>
                 <li class="indicator" style="right: 0px; left: 238px;"></li></ul>
+
               </div>
               <div class="card-content blue lighten-5">
                 <div id="test4"><p id="p-sintoma"></p></div>
@@ -74,12 +77,12 @@
                 <div id="test6"><p id="p-solucion"></p></div>
               </div>
             </div>
-			
-			
-		</div>
-		
 
-	
+
+		</div>
+
+
+
     <script type="text/javascript" src="https://code.jquery.com/jquery-2.2.4.min.js">
     </script>
 	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.0/js/materialize.min.js"></script>

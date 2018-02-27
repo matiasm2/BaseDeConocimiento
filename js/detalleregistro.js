@@ -1,4 +1,7 @@
 var bdCModuleId = 2467; //Id de la aplicación Base de Conocimiento
+var urls = {
+			"content": 'https://10.100.107.90:8088/https://172.16.1.52/api/core/content/'
+	}
 
 $(document).ready(function() {
 
@@ -33,6 +36,8 @@ $(document).ready(function() {
 	if (getParameterByName("id")){
 		//getRecordById(localStorage.sessionToken, bdCModuleId, getParameterByName("id"))
 		executeSearch(localStorage.sessionToken, createFieldValuesRegistro(getParameterByName("id")), 1);
+		content = getAPICall(localStorage.sessionToken, urls.content+getParameterByName("id"));
+		loadContent(content);
 		$('#bt-del').click(function(){
 			deleteRecord(localStorage.sessionToken, bdCModuleId, getParameterByName("id"));
 		});
@@ -109,6 +114,88 @@ function getRecordById (sessionToken, moduleId, contentId){
 			}
 		}
 	});
+}
+
+function loadContent(data){
+		if (data.IsSuccessful){
+			fieldContents = data.RequestedObject.FieldContents;
+			/*$('#sp-titulo').html(fieldContents['22517'].Value);
+			$('#p-sintoma').html("<p>" + fieldContents['22521'].Value + "</p>");
+			$('#p-causa').html("<p>" + fieldContents['22525'].Value + "</p>");
+			$('#p-solucion').html("<p>" + fieldContents['22526'].Value + "</p>");
+			$('#sp-fab').html("Fabricante: " + fieldContents['22523'].Value);
+			$('#sp-tec').html("Tecnología: " + fieldContents['22520'].Value);
+			$('#p-modelo').html("Modelo/s: " + fieldContents['22528'].Value);*/
+			if (fieldContents['22527'].Value){
+					attachments = fieldContents['22527'].Value;
+					for (i=0; i<attachments.length; i++){
+							attachment = getAPICall(localStorage.sessionToken, urls.content+'attachment/'+attachments[i])
+							mimeType = getMymeType(attachment.RequestedObject.AttachmentName.split('.')[1]);
+							var a = document.createElement("a");
+								a.href = 'data:'+mimeType+';base64,'+attachment.RequestedObject.AttachmentBytes;
+								a.innerHTML='<i class="material-icons">file_download</i>';
+								a.setAttribute('download', attachment.RequestedObject.AttachmentName);
+								document.getElementById('buttons').appendChild(a);
+
+					}
+			}
+		} else {
+			alert("Ocurrio un error al cargar el registro.");
+			window.location='https://172.16.1.52:4433/buscarregistro.html';;
+		}
+}
+
+function getMymeType(ext){
+		ext = ext.toLowerCase();
+		mimeType = '';
+		switch(ext){
+			case 'docx':
+				mimeType = 'application/vnd.openxmlformats-officedocument.wordprocessingml.document';
+				break;
+			case 'doc':
+			case 'dot':
+					mimeType = 'application/msword';
+					break;
+			case 'xls':
+			case 'xlm':
+			case 'xla':
+			case 'xlc':
+			case 'xlt':
+			case 'xlw':
+				mimeType = 'application/vnd.ms-exce';
+				break;
+			case 'xlsx':
+					mimeType = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
+					break;
+			case 'pdf':
+				mimeType = 'application/pdf';
+				break;
+			case 'csv':
+					mimeType = 'text/csv';
+					break;
+			case 'txt':
+			case 'text':
+			case 'conf':
+			case 'def':
+				mimeType = 'text/plain';
+				break;
+			case 'png':
+					mimeType = 'image/png';
+					break;
+			case 'jpeg':
+			case 'jpg':
+			case 'jpe':
+				mimeType = 'image/jpeg';
+				break;
+			case 'gif':
+				mimeType = 'image/gif';
+				break;
+			case '':
+					mimeType = '';
+					break;
+		}
+
+		return mimeType;
 }
 
 function deleteRecord (sessionToken, moduleId, contentId){
@@ -206,13 +293,11 @@ function executeSearch (sessionToken, searchOptions, pageNumber){
 			//console.log(soapResponse.content.documentElement.getElementsByTagName('ExecuteSearchResult')[0].lastChild.data);
 			var xmlDoc = jQuery.parseXML(soapResponse.content.documentElement.getElementsByTagName('ExecuteSearchResult')[0].lastChild.data);
 			console.log(xmlDoc);
-			console.log(xmlDoc.documentElement.children[0].children[0]);
-			console.log(xmlDoc.documentElement.children[2]);
-			console.log(xmlDoc.documentElement.getElementsByTagName('Field').length);
-			console.log(xmlDoc.documentElement.getElementsByTagName('Field'));
-			for (i = 0; i < xmlDoc.documentElement.getElementsByTagName('Field').length; i++){
-				console.log(xmlDoc.documentElement.getElementsByTagName('FieldDefinition')[i].attributes[2].value
-				+ xmlDoc.documentElement.getElementsByTagName('Field')[i].innerHTML); //Solo vale cuando hay un solo registro
+			fields = xmlDoc.documentElement.getElementsByTagName('Field');
+			fieldDefinitions = xmlDoc.documentElement.getElementsByTagName('FieldDefinition')
+			for (i = 0; i < fields.length; i++){
+				console.log(fieldDefinitions[i].attributes[2].value
+				+ fields[i].innerHTML); //Solo vale cuando hay un solo registro
 			}
 
 			$('#a-link').attr('href','https://172.16.1.52/apps/ArcherApp/Home.aspx#record/'+bdCModuleId+'/368/'+xmlDoc.documentElement.getElementsByTagName('Record')[0].getAttribute('contentId'));
@@ -240,6 +325,48 @@ function executeSearch (sessionToken, searchOptions, pageNumber){
 			}
 		}
 	});
+}
+
+function getAPICall(sessionToken, url){
+		var response = '';
+
+		$.ajax({
+				 type: "GET",
+				 url: url,
+				 headers: {
+						 'Accept':'application/json,text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+						 'Authorization':'Archer session-id='+sessionToken,
+						 'Content-Type': 'application/json'
+				 },
+				 contentType: 'application/json',
+				 processData: false,
+				 async: false,
+				 dataType: 'json',
+				 success: function(data, textStatus, jqXHR) {
+					 console.log(data);
+					 response = data;
+					 if (data.IsSuccessful){
+							 response = data;
+					 }
+				},
+				error: function(jqXHR, textStatus, errorThorwn) {
+							console.log(jqXHR);
+							console.log(('Ocurrio un error al llamar a la API: ' + textStatus));
+							console.log(errorThorwn);
+				}
+
+		});
+
+		return response;
+}
+
+//Helpers
+function urltoFile(url, filename, mimeType){
+    mimeType = mimeType || (url.match(/^data:([^;]+);/)||'')[1];
+    return (fetch(url)
+        .then(function(res){return res.arrayBuffer();})
+        .then(function(buf){return new File([buf], filename, {type:mimeType});})
+    );
 }
 
 function getParameterByName(name) {
