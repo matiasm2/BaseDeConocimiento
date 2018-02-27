@@ -14,8 +14,8 @@
 	  <nav>
 			<div class="nav-wrapper light-blue darken-4">
 		  <!---<a href="#!" class="brand-logo">Archer API</a>-->
-			<a href="index.html"><img class="materialboxed responsive-img brand-logo " src="images/logo.png" style="width:auto;height:95%"/></a>
-		  
+			<a href="index.html"><img class="responsive-img brand-logo " src="images/logo.png" style="width:auto;height:95%"/></a>
+
 			  <ul class="right hide-on-med-and-down">
 				<li><a href="nuevoregistro.html">Crear Registro</a></li>
 				<li><a href="buscarregistro.html">Buscar Registro</a></li>
@@ -31,19 +31,12 @@
 		  </nav>
     <div class="container">
 		<h1>Crear entrada</h1>
-	
+
       <form class="form-group"id="f-hora" action="javascript:void(0)" method="post">
 		<div class="form-group">
 			<div class="form-group">
 				<label for="titulo">Titulo</label>
 				<input type="text" name="" value="" id="titulo">
-			</div>
-			<div class="form-group">
-				<label for="area">Area</label>
-				<select class="browser-default" id="area" required>
-				  <option value="" disabled selected>Seleccione el área</option>
-				</select>
-				<br>
 			</div>
 			<div class="form-group">
 				<label for="fab">Fabricante</label>
@@ -63,36 +56,50 @@
 				<label for="mod">Modelo/s</label>
 				<input type="text" name="" value="" id="mod" required>
 			</div>
-			
+			<div class="form-group">
+				<label for="area">Area</label>
+				<select class="browser-default" id="area" required>
+				  <option value="" disabled selected>Seleccione el área</option>
+				</select>
+				<br>
+			</div>
+
 			<div class="form-group">
 				<label for="sint">Sintoma/Diagnostico</label>
 				<textarea class="materialize-textarea" type="text" name="" value="" id="sint" cols="3" required></textarea>
 			</div>
-			
+
 			<div class="form-group">
 				<label for="caus">Causa</label>
 				<textarea class="materialize-textarea" type="text" name="" value="" id="caus" cols="3" required></textarea>
 			</div>
-			
+
 			<div class="form-group">
 				<label for="solu">Solucion</label>
 				<textarea class="materialize-textarea" type="text" name="" value="" id="solu" cols="3" required></textarea>
 			</div>
 			<br>
+      <div class="file-field input-field">
+      <div class="btn">
+        <span>Adjuntos</span>
+        <input type="file" id="files" multiple>
+      </div>
+      <div class="file-path-wrapper">
+        <input class="file-path validate" type="text" placeholder="Upload one or more files">
+      </div>
+      </div>
+
 			<button type="submit" class="btn btn-primary" name="button" id="bt-nregistro" >Crear registro</button>
 		</div>
-			
+
       </form>
     </div>
-	
-    <script type="text/javascript" src="js/jquery-3.2.1.min.js">
-    </script>
-	<script type="text/javascript" src="js/jquery.soap.js">
-    </script>
-    <script type="text/javascript" src="js/bootstrap.min.js">
-    </script>
-	<script type="text/javascript" src="js/nuevoregistro.js?anyversion">
-    </script>
+
+    <script type="text/javascript" src="js/jquery-2.2.4.min.js"></script>
+	  <script type="text/javascript" src="js/jquery.soap.js"></script>
+    <script type="text/javascript" src="js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="js/materialize.min.js"></script>
+  	<script type="text/javascript" src="js/nuevoregistro.js?anyversion"></script>
 
   </body>
 </html>
