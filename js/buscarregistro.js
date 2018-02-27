@@ -116,7 +116,7 @@ function getValuesList (sessionToken, valuesListId, selecte){
 			// show error
 			console.log('Error');
 			console.log(SOAPResponse);
-			alert('Ha ocurrido un error al crear un registro: \n'+SOAPResponse.content.documentElement.getElementsByTagName('faultstring')[0].innerHTML);
+			alert('Ha ocurrido un error al cargar las listas de valores: \n'+SOAPResponse.content.documentElement.getElementsByTagName('faultstring')[0].innerHTML);
 			if (SOAPResponse.content.documentElement.getElementsByTagName('faultstring')[0].innerHTML ="Server was unable to process request. ---&gt; Invalid session token"){
 				localStorage.removeItem("sessionToken");
 				window.location='https://172.16.1.52:4433/index.html';
@@ -129,6 +129,7 @@ function createSearchOptionsHora(txticket){
 	txtt = '';
 	tecnologia = '';
 	fabricante = '';
+	operatorLogic = '';
 	if($('#check')[0].checked){
 		tecnologia= '<ValueListFilterCondition>'+
 						'<Operator>Contains</Operator>'+
@@ -140,7 +141,7 @@ function createSearchOptionsHora(txticket){
 					'</ValueListFilterCondition>';
 	}
 	if($('#check2')[0].checked){
-		fabricante= '<ValueListFilterCondition>'+
+			fabricante= '<ValueListFilterCondition>'+
 						'<Operator>Contains</Operator>'+
 						'<Field>22523</Field>'+
 						'<IsNoSelectionIncluded>False</IsNoSelectionIncluded>'+
@@ -148,13 +149,47 @@ function createSearchOptionsHora(txticket){
 							'<Value>'+$('#fab').val()+'</Value>'+
 						'</Values>'+
 					'</ValueListFilterCondition>';
-		console.log(fabricante);
 	}
-	if(txticket != '')txtt = '<TextFilterCondition>'+
-									  '<Operator>Contains</Operator>'+
-									  '<Field name="Numero de ticket">22518</Field>'+
-									  '<Value>'+txticket+'</Value>'+
-									'</TextFilterCondition>';
+	if(txticket != ''){
+		txtt = '<TextFilterCondition>'+
+						  '<Operator>Contains</Operator>'+
+						  '<Field name="Titulo">22517</Field>'+
+						  '<Value>'+txticket+'</Value>'+
+						'</TextFilterCondition>'+
+						'<TextFilterCondition>'+
+							  '<Operator>Contains</Operator>'+
+							  '<Field name="Sintoma">22521</Field>'+
+							  '<Value>'+txticket+'</Value>'+
+						'</TextFilterCondition>'+
+						'<TextFilterCondition>'+
+							  '<Operator>Contains</Operator>'+
+							  '<Field name="Causa">22525</Field>'+
+							  '<Value>'+txticket+'</Value>'+
+						'</TextFilterCondition>'+
+						'<TextFilterCondition>'+
+							  '<Operator>Contains</Operator>'+
+							  '<Field name="Solucion">22526</Field>'+
+							  '<Value>'+txticket+'</Value>'+
+						'</TextFilterCondition>';
+
+			operatorLogic = '<OperatorLogic>1 OR 2 OR 3 OR 4</OperatorLogic>';
+
+	}
+
+	if(txticket != '' && $('#check')[0].checked && $('#check2')[0].checked){
+		operatorLogic = '<OperatorLogic>(1 OR 2 OR 3 OR 4) AND 5 AND 6</OperatorLogic>';
+	}
+
+	else if (txticket != '' && $('#check')[0].checked){
+		operatorLogic = '<OperatorLogic>(1 OR 2 OR 3 OR 4) AND 5</OperatorLogic>';
+	}
+	else if (txticket != '' && $('#check2')[0].checked){
+		operatorLogic = '<OperatorLogic>(1 OR 2 OR 3 OR 4) AND 5</OperatorLogic>';
+	}
+	else if ($('#check')[0].checked && $('#check2')[0].checked){
+		operatorLogic = '<OperatorLogic>1 AND 2</OperatorLogic>';
+	}
+
 	xml = ['<![CDATA[',
 				'<SearchReport>',
 					'<PageSize>100</PageSize>',
@@ -175,6 +210,7 @@ function createSearchOptionsHora(txticket){
 								tecnologia,
 								fabricante,
 							'</Conditions>',
+							 operatorLogic,
 						'</Filter>',
 					'</Criteria>',
 				'</SearchReport>',
