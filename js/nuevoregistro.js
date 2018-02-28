@@ -1,7 +1,7 @@
 var bdCModuleId = 2467; //Id de la aplicación Base de Conocimiento
 
 $(document).ready(function() {
-
+	$('#btn-delfile').hide();
 
 	//
 	if (typeof(Storage) !== "undefined") {
@@ -45,7 +45,10 @@ $(document).ready(function() {
 
 				 };
 
-  }
+  	 	} else {
+					json = createContentJSON([]);
+					postContent(localStorage.sessionToken, json);
+			}
 });
 
 	$('#bt-buscar').click(function(){
@@ -54,18 +57,28 @@ $(document).ready(function() {
     });
 
 	$('#bt-search').click(function (){
-		window.location=baseURL+'/buscarregistro.html';
+		window.location='https://172.16.1.52:4433/buscarregistro.html';
 	});
 
 	$('#bt-logout').click(function(){
 		localStorage.removeItem("sessionToken");
-		window.location=baseURL+'/index.html';
+		window.location='https://172.16.1.52:4433/index.html';
     });
 
 	$('#bt-mov-logout').click(function(){
 		localStorage.removeItem("sessionToken");
-		window.location=baseURL+'/index.html';
+		window.location='https://172.16.1.52:4433/index.html';
     });
+
+		$('#btn-delfile').click(function(){
+				$('#files').val('');
+				$('#txt').val('');
+				$('#btn-delfile').hide();
+	  });
+
+		$('#files').change(function(){
+			$('#btn-delfile').show();
+		});
 
 });
 
