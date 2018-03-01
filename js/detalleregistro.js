@@ -1,6 +1,7 @@
 var bdCModuleId = 2467; //Id de la aplicación Base de Conocimiento
 var urls = {
-			"content": 'https://10.100.107.90:8088/https://172.16.1.52/api/core/content/'
+			"content": 'https://10.100.107.90:8088/https://172.16.1.52/api/core/content/',
+			"valuesREST": 'https://10.100.107.90:8088/https://172.16.1.52/api/core/system/valueslistvalue/flat/valueslist/'
 	}
 
 $(document).ready(function() {
@@ -56,15 +57,21 @@ $('#f-editReg').hide();
 		$('#bt-edit').click(function(){
 			$('#c-detalle').hide();
 			$('#f-editReg').show();
-			if(soapAPICall(editRecordArray(bdCModuleId, getParameterByName("id"), createFieldValuesRegistro())){
+			
+		});
+		
+		$('#bt-editar').click(function(){
+			if(soapAPICall(editRecordArray(bdCModuleId, getParameterByName("id")))){
 				location.reload();
 			}
+		});
+		
+		
 			
-		}
 		$('#bt-cancelar').click(function(){
 			$('#c-detalle').show();
 			$('#f-editReg').hide();
-		}
+		});
 	}
 	/*
 	$('#sin').click(function(){
@@ -147,9 +154,17 @@ function loadContent(data){
 			$('#p-sintoma').html("<p>" + fieldContents['22521'].Value + "</p>");
 			$('#p-causa').html("<p>" + fieldContents['22525'].Value + "</p>");
 			$('#p-solucion').html("<p>" + fieldContents['22526'].Value + "</p>");
-			$('#sp-fab').html("Fabricante: " + fieldContents['22523'].Value);
-			$('#sp-tec').html("Tecnología: " + fieldContents['22520'].Value);
+			$('#sp-fab').html("Fabricante: " + fieldContents['22523'].Value.ValuesListIds[0]);
+			$('#sp-tec').html("Tecnología: " + fieldContents['22520'].Value.ValuesListIds[0]);
 			$('#p-modelo').html("Modelo/s: " + fieldContents['22528'].Value);*/
+			$('#titulo').val(fieldContents['22517'].Value);
+			$('#sint').val(fieldContents['22521'].Value);
+			$('#caus').val(fieldContents['22525'].Value);
+			$('#solu').val(fieldContents['22526'].Value);
+			$('#mod').val(fieldContents['22528'].Value);
+			$('#tec').val(fieldContents['22520'].Value.ValuesListIds[0]);
+			$('#fab').val(fieldContents['22523'].Value.ValuesListIds[0]);
+			$('#area').val(fieldContents['22524'].Value.ValuesListIds[0]);
 			if (fieldContents['22527'].Value){
 					attachments = fieldContents['22527'].Value;
 					for (i=0; i<attachments.length; i++){
@@ -387,7 +402,7 @@ function getAPICall(sessionToken, url){
 
 //----------------------------------------------------------Editar Registro--------------------------------------------------
 
-function createFieldValuesRegistro(){
+function editFieldValuesRegistro(){
 
 	// TODO: Se podria automatizar la busqueda de los id trayendo la definicion de los campos de la aplicación y filtrando por alias.
 	// Se hace via REST
@@ -401,14 +416,14 @@ function createFieldValuesRegistro(){
 	mod = '<Field id="22528" value="'+$('#mod').val()+'"></Field>';
 	sint = '<Field id="22521" value="'+$('#sint').val()+'"></Field>';
 	causa = '<Field id="22525" value="'+$('#caus').val()+'"></Field>';
-	soluc = '<Field id="22526" value="'+$('#solu').val()+'"></Field>';
+	//soluc = '<Field id="22526" value="'+$('#solu').val()+'"></Field>';
 	fieldValues2 = '</fieldValues>';
-	ccdata = ']]>';
+	ccdata = ' ]]>';
 
-	fieldValues = [cdata, fieldValues1, titulo, area, fabri, tec, mod, sint, causa, soluc, fieldValues2, ccdata];
-	fieldValues.join('');
+	fieldValues = [cdata, fieldValues1, titulo, area, fabri, tec, mod, sint, causa, fieldValues2, ccdata];
+	
 
-	return fieldValues
+	return fieldValues.join('');
 }
 
 function getValuesListArray(valuesListId){
@@ -427,9 +442,9 @@ function getValuesListArray(valuesListId){
 	return [headers, data]
 }
 
-function editRecordArray(moduleId, contentId, fieldValues){
+function editRecordArray(moduleId, contentId){
 	headers = {
-		url: location.protocol+ '172.16.1.52/ws/record.asmx',
+		url: location.protocol+'//172.16.1.52/ws/record.asmx',
 		method: 'UpdateRecord',
 		SOAPAction: 'http://archer-tech.com/webservices/UpdateRecord',
 		namespaceURL: 'http://archer-tech.com/webservices/'
@@ -439,8 +454,7 @@ function editRecordArray(moduleId, contentId, fieldValues){
 		sessionToken: localStorage.sessionToken,
 		moduleId: moduleId,
 		contentId: contentId,
-		fieldValues: fieldValues,
-		
+		fieldValues: editFieldValuesRegistro()
 	}
 	
 	return [headers, data]
@@ -491,14 +505,6 @@ function soapAPICall(array){
 	});
 
 	return response;
-}
-//Helpers
-function urltoFile(url, filename, mimeType){
-    mimeType = mimeType || (url.match(/^data:([^;]+);/)||'')[1];
-    return (fetch(url)
-        .then(function(res){return res.arrayBuffer();})
-        .then(function(buf){return new File([buf], filename, {type:mimeType});})
-    );
 }
 
 function getParameterByName(name) {

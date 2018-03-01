@@ -60,7 +60,7 @@
 					  <p id="p-modelo"></p>
             <div id="buttons">
 					         <a href="javascript:void(0)" id="bt-del"><i class="material-icons">delete</i></a>
-							 <a href="editarregistro.html" id= "bt-edit"><i class="material-icons">edit</i></a>
+							 <a href="javascript:void(0)" id= "bt-edit"><i class="material-icons">edit</i></a>
             </div>
               </div>
               <div class="card-tabs">
@@ -80,67 +80,58 @@
 
 			<!----EDITAR REGISTRO-->
 			
-			<form class="form-group"id="f-editReg" action="javascript:void(0)" method="post">
-		<div class="form-group">
+		<form class="form-group"id="f-editReg" action="javascript:void(0)" method="post">
+			<h2>Editar Registro</h2>
 			<div class="form-group">
-				<label for="titulo">Titulo</label>
-				<input type="text" name="" value="" id="titulo">
-			</div>
-			<div class="form-group">
-				<label for="fab">Fabricante</label>
-				<select class="browser-default" id="fab" required>
-				  <option value="" disabled selected>Seleccione el fabricante</option>
-				</select>
+				<div class="form-group">
+					<label for="titulo">Titulo</label>
+					<input type="text" name="" value="" id="titulo">
+				</div>
+				<div class="form-group">
+					<label for="fab">Fabricante</label>
+					<select class="browser-default" id="fab" required>
+					  <option value="" disabled selected>Seleccione el fabricante</option>
+					</select>
+					<br>
+				</div>
+				<div class="form-group">
+					<label for="tec">Tecnología</label>
+					<select class="browser-default" id="tec" required>
+					  <option value="" disabled selected>Seleccione la tecnología</option>
+					</select>
+					<br>
+				</div>
+				<div class="form-group">
+					<label for="mod">Modelo/s</label>
+					<input type="text" name="" value="" id="mod" required>
+				</div>
+				<div class="form-group">
+					<label for="area">Area</label>
+					<select class="browser-default" id="area" required>
+					  <option value="" disabled selected>Seleccione el área</option>
+					</select>
+					<br>
+				</div>
+
+				<div class="form-group">
+					<label for="sint">Sintoma/Diagnostico</label>
+					<textarea class="materialize-textarea" type="text" name="" value="" id="sint" cols="3" required></textarea>
+				</div>
+
+				<div class="form-group">
+					<label for="caus">Causa</label>
+					<textarea class="materialize-textarea" type="text" name="" value="" id="caus" cols="3" required></textarea>
+				</div>
+
+				<div class="form-group">
+					<label for="solu">Solucion</label>
+					<textarea class="materialize-textarea" type="text" name="" value="" id="solu" cols="3" required></textarea>
+				</div>
 				<br>
-			</div>
-			<div class="form-group">
-				<label for="tec">Tecnología</label>
-				<select class="browser-default" id="tec" required>
-				  <option value="" disabled selected>Seleccione la tecnología</option>
-				</select>
-				<br>
-			</div>
-			<div class="form-group">
-				<label for="mod">Modelo/s</label>
-				<input type="text" name="" value="" id="mod" required>
-			</div>
-			<div class="form-group">
-				<label for="area">Area</label>
-				<select class="browser-default" id="area" required>
-				  <option value="" disabled selected>Seleccione el área</option>
-				</select>
-				<br>
-			</div>
 
-			<div class="form-group">
-				<label for="sint">Sintoma/Diagnostico</label>
-				<textarea class="materialize-textarea" type="text" name="" value="" id="sint" cols="3" required></textarea>
+				<button type="submit" class="btn btn-primary" name="button" id="bt-editar" >Editar registro</button> <button type="button" class="btn btn-primary" name="button" id="bt-cancelar" >Cancelar</button> 
+				
 			</div>
-
-			<div class="form-group">
-				<label for="caus">Causa</label>
-				<textarea class="materialize-textarea" type="text" name="" value="" id="caus" cols="3" required></textarea>
-			</div>
-
-			<div class="form-group">
-				<label for="solu">Solucion</label>
-				<textarea class="materialize-textarea" type="text" name="" value="" id="solu" cols="3" required></textarea>
-			</div>
-			<br>
-      <div class="file-field input-field">
-        <div class="btn">
-          <span>Adjuntos</span>
-          <input type="file" id="files" multiple>
-        </div>
-        <div class="file-path-wrapper">
-          <input class="file-path validate" type="text" placeholder="Upload one or more files" id="txt" >
-        </div>
-        <a class="waves-effect waves-teal btn-flat" id="btn-delfile"><i class="material-icons left">delete</i></a>
-      </div>
-
-			<button type="submit" class="btn btn-primary" name="button" id="bt-nregistro" >Editar registro</button> <button type="button" class="btn btn-primary" name="button" id="bt-cancelar" >Editar registro</button> 
-			
-		</div>
            
       </form>
 
