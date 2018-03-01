@@ -1,7 +1,22 @@
+var urls = {
+			"baseURL": ''
+	}
 $(document).ready(function() {
+	if ( ! window.console ) console = { log: function(){} };
+	String.prototype.format = function() {
+		var s = this,
+		i = arguments.length;
+		while (i--) {
+			s = s.replace(new RegExp('\\{' + i + '\\}', 'gm'), arguments[i]);
+		}
+		return s;
+    };
+
+	urls.baseURL = '{0}//{1}'.format(window.location.protocol, window.location.host);
+
 	if (typeof(Storage) !== "undefined") {
 		if (localStorage.sessionToken) {
-			window.location='https://172.16.1.52:4433/nuevoregistro.html';
+			window.location=urls.baseURL+'/nuevoregistro.html';
 		}
 	} else {
 		alert('There is not support for LocalStorage');
@@ -13,14 +28,10 @@ $(document).ready(function() {
 			sessionToken = response.content.firstChild.textContent;
 			if (sessionToken){
 				 localStorage.sessionToken = sessionToken;
-				 window.location='https://172.16.1.52:4433/nuevoregistro.html';
+				 window.location=urls.baseURL+'/nuevoregistro.html';
 			}
     });
 });
-
-function postAPICall(array){
-	
-}
 
 function soapAPICall(array){
 	var response = '';
@@ -37,7 +48,6 @@ function soapAPICall(array){
 
 		success: function (soapResponse) {
 				response = soapResponse;
-				console.log(response);
 		},
 		error: function (SOAPResponse) {
 			console.log('Error');
@@ -46,25 +56,7 @@ function soapAPICall(array){
 		}
 	});
 
-	return response;
-}
-
-function getDomainSessionArray(username, password, instancename, usersDomain){
-	headers = {
-		url: location.protocol+'//172.16.1.52/ws/general.asmx',
-		method: 'CreateDomainUserSessionFromInstance',
-		SOAPAction: 'http://archer-tech.com/webservices/CreateDomainUserSessionFromInstance',
-		namespaceURL: 'http://archer-tech.com/webservices/'
-	}
-
-	data = {
-		userName: username,
-		password: password,
-		instanceName: instancename,
-		usersDomain: usersDomain
-	}
-
-	return [headers, data]
+	return response
 }
 
 function getSessionArray(username, password, instancename){
