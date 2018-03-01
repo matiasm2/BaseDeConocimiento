@@ -24,11 +24,13 @@ $(document).ready(function() {
 		}
 	} else {
 			// Sorry! No Web Storage support..
-			alert("Ha ocurrido un error al intentar utilizar SessionStorage.");
+			alert("Ha ocurrido un error al intentar utilizar SessionStorage");
 	}
 
-	$('#bt-nregistro').click(function(){
+	$('#bt-eregistro').click(function(){
 		 	soapAPICall(createFieldValuesRegistro());
+			soapAPICall(getValuesListArray());
+			soapAPICall(editRecordArray());
 	});
 
 	$('#bt-logout').click(function(){
@@ -106,6 +108,26 @@ function getValuesListArray(valuesListId){
 	return [headers, data]
 }
 
+function editRecordArray(moduleId, contentId, fieldValues){
+	headers = {
+		url: location.protocol+ '172.16.1.52/ws/record.asmx',
+		method: 'UpdateRecord',
+		SOAPAction: 'http://archer-tech.com/webservices/UpdateRecord',
+		namespaceURL: 'http://archer-tech.com/webservices/'
+	}
+	
+	data= {
+		sessionToken: localStorage.sessionToken,
+		moduleId: moduleId,
+		contentId: contentId,
+		fieldValues: fieldValues,
+		
+	}
+	
+	return [headers, data]
+}
+
+
 function loadSelects(soapResponse, selecte){
 	valuesHTML = document.createElement('GetValuesListResponse');
 	valuesHTML.innerHTML = soapResponse.content.documentElement.getElementsByTagName('GetValuesListResponse')[0].textContent;
@@ -151,3 +173,4 @@ function soapAPICall(array){
 
 	return response;
 }
+
